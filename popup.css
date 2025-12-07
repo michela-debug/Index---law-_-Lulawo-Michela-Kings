@@ -1,0 +1,132 @@
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a2342, #1b4b8a);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== Popup Overlay ===== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 35, 66, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1000;
+}
+
+.popup-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ===== Popup Box ===== */
+.popup-box {
+  background: #ffffff;
+  color: #0a2342;
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
+  text-align: center;
+  width: min(420px, 90%);
+  box-shadow: 0 0 25px rgba(249, 211, 66, 0.4);
+  border: 3px solid #f9d342;
+  animation: slideUp 0.8s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===== Close Button ===== */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #0a2342;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #f9d342;
+}
+
+/* ===== Header & YouTube Logo ===== */
+.popup-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.yt-logo {
+  width: 140px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.popup-box h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 0.4rem;
+}
+
+.popup-box h2 span {
+  color: #f9d342;
+}
+
+/* ===== Text ===== */
+.popup-box p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1.8rem;
+  line-height: 1.4;
+}
+
+/* ===== Button ===== */
+.subscribe-btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #f9d342, #ffcc57);
+  color: #0a423b;
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(249, 211, 66, 0.35);
+}
+
+.subscribe-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(249, 211, 66, 0.5);
+}
+

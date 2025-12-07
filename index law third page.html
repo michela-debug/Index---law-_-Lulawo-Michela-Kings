@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Index Law Games – Case Crackers</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f4f6f8; color:#1a1a1a; margin:0; padding:0; }
+    header { background:#0a2342; color:#f9d342; padding:0.8rem 1rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .brand { display:flex; align-items:center; gap:.6rem; }
+    .logo { font-size:1.6rem; }
+    h1 { margin:0; font-size:1.1rem; letter-spacing:.5px; }
+    nav a { color:#f9d342; background:transparent; border:1px solid rgba(249,211,66,0.08); padding:.5rem .8rem; border-radius:6px; text-decoration:none; font-weight:600; }
+    main { max-width:900px; margin:1.6rem auto; padding:1.6rem; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+    .small { font-size:.95rem; color:#444; }
+    /* quiz */
+    h2 { color:#0a2342; margin-top:0; }
+    .options { margin-top:1rem; }
+    .option { display:block; background:#eaeaea; border:none; border-radius:8px; padding:10px; margin:8px 0; cursor:pointer; text-align:left; transition:background .15s; }
+    .option:hover { background:#d6e0f0; }
+    .controls { text-align:center; margin-top:1rem; }
+    button { background:#0a2342; color:#f9d342; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; }
+    button:hover { background:#133b7a; }
+    /* leaderboard */
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th, td { border:2px solid #f9d342; padding:10px; text-align:center; }
+    th { background:#0a2342; color:#f9d342; }
+    input[type="text"], textarea { padding:8px; border:1px solid #ccc; border-radius:6px; font-size:1rem; width:100%; }
+    /* comments */
+    #comment-section { margin-top:1.6rem; border-radius:10px; padding:1rem; border:2px solid #f9d342; background:#f9f9f9; }
+    .comment-row { display:flex; gap:10px; align-items:flex-start; margin-top:10px; }
+    .comment-body { background:#fff; border:1px solid #e0e0e0; padding:10px; border-radius:8px; width:100%; }
+    .comment-meta { color:#0a2342; font-weight:700; }
+    .comment-text { margin:6px 0 8px 0; color:#111; }
+    .comment-actions { display:flex; gap:.6rem; align-items:center; font-size:.95rem; color:#555; }
+    .like-btn { background:transparent; border:1px solid #ddd; padding:6px 8px; border-radius:6px; cursor:pointer; }
+    .reply-list { margin-left:2.2rem; margin-top:8px; }
+    .reply { background:#fff; border:1px solid #eee; padding:8px; border-radius:8px; margin-top:8px; }
+    .reply small { color:#666; }
+    .reply-input { margin-top:8px; display:flex; gap:8px; }
+    .reply-input input { flex:1; }
+    .next-page { margin-top:1rem; display:inline-block; text-decoration:none; padding:8px 12px; background:#0a2342; color:#f9d342; border-radius:8px; }
+    footer { text-align:center; padding:1rem 0; color:#666; font-size:.9rem; }
+    @media (max-width:640px){ main{margin:1rem} header{flex-direction:column; align-items:flex-start; gap:.6rem} }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span class="logo">⚖️</span>
+      <div>
+        <h1>Index Law Games</h1>
+        <div class="small">Case Crackers</div>
+      </div>
+    </div>
+    <nav>
+      <!-- header Next Page link (goes to next.html) -->
+      <a id="header-next" href="next page.html">Next Page →</a>
+    </nav>
+  </header>
+
+  <!-- START SCREEN -->
+  <main id="start-screen">
+    <h2>Welcome to Case Crackers</h2>
+    <p class="small">Test your legal reasoning skills. Can you solve all 10 cases?</p>
+    <div class="controls" style="margin-top:1.2rem">
+      <button id="start-btn">Start Game</button>
+    </div>
+  </main>
+
+  <!-- QUIZ -->
+  <main id="quiz-section" style="display:none">
+    <h2 id="case-title">Case 1</h2>
+    <p id="case-text" class="small"></p>
+    <div id="options" class="options"></div>
+    <div id="feedback" class="small" style="font-weight:700;margin-top:.8rem"></div>
+    <div class="controls" style="margin-top:1rem">
+      <button id="next-btn" style="display:none">Next Case</button>
+    </div>
+  </main>
+
+  <!-- RESULTS + LEADERBOARD + COMMENTS -->
+  <main id="result-screen" style="display:none">
+    <h2>Results</h2>
+    <p id="result-text" class="small"></p>
+    <p id="comment" class="small" style="font-weight:700"></p>
+
+    <div id="name-entry" style="text-align:center; margin-top:0.6rem">
+      <p class="small">Enter your name to save your score:</p>
+      <input id="player-name" type="text" placeholder="Your Name" />
+      <div style="margin-top:.6rem"><button id="save-btn">Save Score</button></div>
+    </div>
+
+    <h3 style="color:#0a2342; margin-top:1rem">🏆 Leaderboard</h3>
+    <table>
+      <thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+
+    <!-- COMMENT BOARD -->
+    <div id="comment-section">
+      <h3 style="margin:0;color:#0a2342">💬 Student Courtroom — Share Your Thoughts</h3>
+      <div style="margin-top:.6rem; display:flex; gap:.6rem;">
+        <input id="username" type="text" placeholder="Your name (optional)" style="flex:1" />
+      </div>
+      <div style="margin-top:.6rem;">
+        <textarea id="comment-input" rows="3" placeholder="Write a comment..."></textarea>
+      </div>
+      <div style="margin-top:.6rem;">
+        <button id="post-comment-btn">Post Comment</button>
+      </div>
+
+      <div id="comments-list" style="margin-top:1rem"></div>
+    </div>
+
+    <div class="controls" style="margin-top:1.2rem">
+      <!-- Next Page button at bottom of results -->
+      <a class="next-page" id="bottom-next" href="next page.html">Next Page →</a>
+      <button id="restart-btn" style="margin-left:8px">Play Again</button>
+    </div>
+  </main>
+
+  <footer>Index Law Games — built for law students ✨</footer>
+
+  <script>
+    /* ---------------- quiz data ---------------- */
+    const cases = [
+      { text: "Jamie finds a wallet with $200 and keeps it after finding the owner online. What’s this?", options: ["Theft", "No Crime", "Trespass"], correct: 0 },
+      { text: "Alex signs a contract to buy a car, but the seller never delivers it. What type of law applies?", options: ["Criminal Law", "Contract Law", "Tort Law"], correct: 1 },
+      { text: "Taylor posts a false statement online that hurts Jordan’s reputation. What tort applies?", options: ["Negligence", "Defamation", "Battery"], correct: 1 },
+      { text: "Sam accidentally bumps into Lee causing injury. Lee sues. What area of law covers this?", options: ["Tort Law", "Criminal Law", "Constitutional Law"], correct: 0 },
+      { text: "A police officer searches a house without a warrant. What law might be violated?", options: ["Contract Law", "Constitutional Law", "Tort Law"], correct: 1 },
+      { text: "A company releases a product that injures users. What legal concept applies?", options: ["Product Liability", "Assault", "Property Law"], correct: 0 },
+      { text: "Mia offers to sell her bike to Jake for $200. Jake refuses to pay. What’s this?", options: ["Breach of Contract", "Negligence", "Defamation"], correct: 0 },
+      { text: "Chris damages a friend’s car after an argument. What’s the correct term?", options: ["Trespass to Goods", "Battery", "Negligence"], correct: 0 },
+      { text: "A site posts private medical info about a celebrity. What tort may apply?", options: ["Invasion of Privacy", "Defamation", "Breach of Contract"], correct: 0 },
+      { text: "Guilt proven beyond a reasonable doubt refers to what standard?", options: ["Balance of Probabilities", "Beyond a Reasonable Doubt", "Prima Facie"], correct: 1 }
+    ];
+
+    /* ---------- state ---------- */
+    let currentCase = 0, score = 0;
+
+    /* ---------- elements ---------- */
+    const startScreen = document.getElementById('start-screen');
+    const quizSection = document.getElementById('quiz-section');
+    const resultScreen = document.getElementById('result-screen');
+    const caseTitle = document.getElementById('case-title');
+    const caseText = document.getElementById('case-text');
+    const optionsDiv = document.getElementById('options');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const startBtn = document.getElementById('start-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const playerNameInput = document.getElementById('player-name');
+    const leaderboardBody = document.getElementById('leaderboard-body');
+    const resultText = document.getElementById('result-text');
+    const commentShort = document.getElementById('comment');
+
+    /* comment elements */
+    const postCommentBtn = document.getElementById('post-comment-btn');
+    const commentInput = document.getElementById('comment-input');
+    const usernameInput = document.getElementById('username');
+    const commentsList = document.getElementById('comments-list');
+
+    /* ---------- quiz logic ---------- */
+    startBtn.onclick = () => {
+      startScreen.style.display = 'none';
+      quizSection.style.display = 'block';
+      loadCase();
+    };
+
+    function loadCase(){
+      const c = cases[currentCase];
+      caseTitle.textContent = `Case ${currentCase+1}`;
+      caseText.textContent = c.text;
+      optionsDiv.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+      c.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(choice){
+      const c = cases[currentCase];
+      const buttons = document.querySelectorAll('.option');
+      buttons.forEach(b => b.disabled = true);
+      if(choice === c.correct){
+        feedback.textContent = '✅ Correct!';
+        feedback.style.color = 'green';
+        score++;
+      } else {
+        feedback.textContent = '❌ Wrong! Correct: ' + c.options[c.correct];
+        feedback.style.color = 'red';
+      }
+      nextBtn.style.display = 'inline-block';
+    }
+
+    nextBtn.onclick = () => {
+      currentCase++;
+      if(currentCase < cases.length) loadCase();
+      else showResults();
+    };
+
+    function showResults(){
+      quizSection.style.display = 'none';
+      resultScreen.style.display = 'block';
+      resultText.textContent = `You solved ${score} out of ${cases.length} cases correctly.`;
+      commentShort.textContent = score === cases.length ? '🌟 Excellent!' : 'Keep practicing!';
+      displayLeaderboard();
+      displayComments(); // keep comments visible
+    }
+
+    /* ---------- leaderboard ---------- */
+    saveBtn.onclick = () => {
+      const name = playerNameInput.value.trim();
+      if(!name) { alert('Please enter a name to save your score.'); return; }
+      const lb = JSON.parse(localStorage.getItem('caseCrackersLeaderboard')) || [];
+      lb.push({ name, score, when: new Date().toISOString() });
+      lb.sort((a,b) => b.score - a.score || new Date(a.when) - new Date(b.when));
+      localStorage.setItem('caseCrackersLeaderboard', JSON.stringify(lb.slice(0,5)));
+      displayLeaderboard();
+      document.getElementById('name-entry').style.display = 'none';
+    };
+
+    function displayLeaderboard(){
+      const lb = JSON.parse(localStorage.getItem('caseCrackersLeaderboard')) || [];
+      leaderboardBody.innerHTML = lb.map((e,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(e.name)}</td><td>${e.score}</td></tr>`).join('');
+    }
+
+    /* ---------- comments with likes & replies ---------- */
+    // comment structure: { id, name, text, time, likes, replies: [ { id, name, text, time } ] }
+    function getComments(){ return JSON.parse(localStorage.getItem('caseCrackersComments')) || []; }
+    function saveComments(comments){ localStorage.setItem('caseCrackersComments', JSON.stringify(comments)); }
+
+    postCommentBtn.onclick = () => {
+      const text = commentInput.value.trim();
+      if(!text) return alert('Type a comment before posting.');
+      const name = usernameInput.value.trim() || 'Anonymous';
+      const comments = getComments();
+      const newComment = { id: 'c_'+Date.now()+'_'+Math.floor(Math.random()*900), name, text, time: new Date().toISOString(), likes:0, replies:[] };
+      comments.unshift(newComment);
+      saveComments(comments.slice(0,50)); // keep recent 50
+      commentInput.value = '';
+      displayComments();
+    };
+
+    function displayComments(){
+      const comments = getComments();
+      if(!comments.length){ commentsList.innerHTML = '<div class="small">No comments yet — be the first!</div>'; return; }
+      commentsList.innerHTML = comments.map(c => renderCommentHtml(c)).join('');
+      // attach listeners after HTML insert
+      comments.forEach(c => {
+        const likeBtn = document.getElementById('like-'+c.id);
+        if(likeBtn) likeBtn.onclick = () => toggleLike(c.id);
+        const replyToggle = document.getElementById('reply-toggle-'+c.id);
+        if(replyToggle) replyToggle.onclick = () => toggleReplyInput(c.id);
+        const replySubmit = document.getElementById('reply-submit-'+c.id);
+        if(replySubmit) replySubmit.onclick = () => submitReply(c.id);
+      });
+    }
+
+    function renderCommentHtml(c){
+      const time = new Date(c.time).toLocaleString();
+      const repliesHtml = (c.replies || []).map(r => `<div class="reply"><div style="font-weight:700;color:#0a2342">${escapeHtml(r.name)} <small style="color:#666">(${new Date(r.time).toLocaleString()})</small></div><div style="margin-top:6px">${escapeHtml(r.text)}</div></div>`).join('');
+      return `
+        <div class="comment-row">
+          <div style="width:46px; text-align:center; font-weight:700;">${c.likes}</div>
+          <div class="comment-body">
+            <div class="comment-meta">${escapeHtml(c.name)} <small style="color:#666">(${time})</small></div>
+            <div class="comment-text">${escapeHtml(c.text)}</div>
+            <div class="comment-actions">
+              <button class="like-btn" id="like-${c.id}">👍 Like</button>
+              <button class="like-btn" id="reply-toggle-${c.id}">💬 Reply</button>
+            </div>
+            <div id="reply-input-area-${c.id}" class="reply-list" style="display:none;">
+              <div class="reply-input">
+                <input id="reply-name-${c.id}" placeholder="Your name (optional)" />
+                <input id="reply-text-${c.id}" placeholder="Write a reply..." />
+                <button id="reply-submit-${c.id}">Send</button>
+              </div>
+            </div>
+            ${repliesHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleLike(commentId){
+      const comments = getComments();
+      const idx = comments.findIndex(c=>c.id===commentId);
+      if(idx===-1) return;
+      comments[idx].likes = (comments[idx].likes || 0) + 1;
+      saveComments(comments);
+      displayComments();
+    }
+
+    function toggleReplyInput(commentId){
+      const area = document.getElementById('reply-input-area-'+commentId);
+      if(!area) return;
+      area.style.display = (area.style.display==='none' || area.style.display==='') ? 'block' : 'none';
+    }
+
+    function submitReply(commentId){
+      const nameInput = document.getElementById('reply-name-'+commentId);
+      const textInput = document.getElementById('reply-text-'+commentId);
+      if(!textInput || !textInput.value.trim()) return alert('Type a reply before sending.');
+      const name = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Anonymous';
+      const text = textInput.value.trim();
+      const comments = getComments();
+      const idx = comments.findIndex(c=>c.id===commentId);
+      if(idx===-1) return alert('Comment not found.');
+      const newReply = { id: 'r_'+Date.now()+'_'+Math.floor(Math.random()*900), name, text, time:new Date().toISOString() };
+      comments[idx].replies = comments[idx].replies || [];
+      comments[idx].replies.push(newReply);
+      saveComments(comments);
+      displayComments();
+    }
+
+    /* ---------- helpers ---------- */
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"'`=\/]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;','`':'&#96;','=':'&#61;'}[s]));
+    }
+
+    /* ---------- restart ---------- */
+    document.getElementById('restart-btn').onclick = () => {
+      score=0; currentCase=0;
+      // show start screen to start again
+      resultScreen.style.display='none';
+      startScreen.style.display='block';
+      playerNameInput.value='';
+      document.getElementById('name-entry').style.display='block';
+    };
+
+    /* ---------- initial render ---------- */
+    displayLeaderboard();
+    displayComments();
+  </script>
+  <!-- START: Subscribe Modal (paste before </body>) -->
+<style>
+  /* Modal backdrop */
+  .subscribe-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 35, 66, 0.6); /* navy tinted */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeInBackdrop .28s ease;
+  }
+  @keyframes fadeInBackdrop {
+    from { opacity: 0 }
+    to { opacity: 1 }
+  }
+
+  /* Modal card */
+  .subscribe-modal {
+    width: min(520px, 92%);
+    background: linear-gradient(180deg,#fff 0%, #f8f9fb 100%);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(10,35,66,0.35), 0 6px 18px rgba(10,35,66,0.12);
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 18px;
+    padding: 18px 18px 18px 18px;
+    align-items: center;
+    transform: translateY(14px) scale(.96);
+    animation: popIn .36s cubic-bezier(.16,.9,.3,1) forwards;
+    border: 2px solid rgba(249,211,66,0.14);
+    position: relative;
+    overflow: visible;
+  }
+  @keyframes popIn {
+    to { transform: translateY(0) scale(1) }
+  }
+
+  /* Left badge area */
+  .subscribe-badge {
+    width: 84px;
+    height: 84px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#ff3b3b,#ff2a2a);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:800;
+    font-size:28px;
+    box-shadow: 0 8px 20px rgba(255,43,43,0.25);
+    flex-shrink:0;
+    margin-left: 2px;
+  }
+
+  /* Text area */
+  .subscribe-content h3 {
+    margin:0 0 6px 0;
+    font-size:1.1rem;
+    color:#0a2342;
+    letter-spacing:0.2px;
+  }
+  .subscribe-content p {
+    margin:0;
+    color:#333;
+    font-size:0.95rem;
+    opacity:0.96;
+  }
+
+  /* CTA and controls */
+  .subscribe-cta {
+    margin-top: 10px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .subscribe-btn {
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background: linear-gradient(180deg,#ff0000,#e60000);
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:800;
+    font-size:1rem;
+    cursor:pointer;
+    box-shadow: 0 10px 24px rgba(230,0,0,0.22);
+    transform-origin: center;
+    animation: pulse 2.2s infinite;
+    text-decoration:none;
+  }
+  @keyframes pulse {
+    0% { transform: translateY(0) scale(1) }
+    60% { transform: translateY(-2px) scale(1.02) }
+    100% { transform: translateY(0) scale(1) }
+  }
+
+  .subscribe-later {
+    background:transparent;
+    border:1px solid rgba(10,35,66,0.08);
+    color:#0a2342;
+    padding:8px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+
+  /* Small "x" close top-right */
+  .subscribe-close {
+    position:absolute;
+    top:8px;
+    right:10px;
+    background:transparent;
+    border:none;
+    color:#0a2342;
+    font-weight:700;
+    font-size:18px;
+    cursor:pointer;
+    padding:6px;
+    border-radius:6px;
+  }
+  .subscribe-close:hover { background: rgba(10,35,66,0.04) }
+
+  /* small accent under title */
+  .subscribe-underline {
+    height:4px;
+    width:48px;
+    background: linear-gradient(90deg,#f9d342,#ffb84d);
+    border-radius:8px;
+    margin-top:8px;
+  }
+
+  /* responsive tweaks */
+  @media (max-width:520px) {
+    .subscribe-modal { grid-template-columns: 64px 1fr; padding:14px; gap:12px; border-radius:10px; }
+    .subscribe-badge { width:64px; height:64px; font-size:22px; border-radius:10px; }
+    .subscribe-content h3 { font-size:1rem; }
+    .subscribe-btn { font-size:0.95rem; padding:9px 12px; }
+  }
+</style>
+
+<div class="subscribe-backdrop" id="subscribe-backdrop" role="dialog" aria-modal="true" aria-labelledby="subscribe-title">
+  <div class="subscribe-modal" role="document">
+    <button class="subscribe-close" id="subscribe-close" aria-label="Close dialog">&times;</button>
+
+    <div class="subscribe-badge" aria-hidden="true">
+      <!-- YouTube play icon simple -->
+      <svg width="44" height="30" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="24" height="16" rx="3" fill="white" opacity="0.08"/>
+        <path d="M9.5 4L15 8L9.5 12V4Z" fill="#fff"/>
+      </svg>
+    </div>
+
+    <div class="subscribe-content">
+      <h3 id="subscribe-title">SUBSCRIBE TO MY YOUTUBE CHANNEL</h3>
+      <div class="subscribe-underline" aria-hidden="true"></div>
+      <p style="margin-top:10px;"><strong>"Lulawo Michela Kiara"</strong><br>
+      New legal mini-cases, quick study tips, and fun law games — drop by and subscribe!</p>
+
+      <div class="subscribe-cta">
+        <!-- Edit the href to your actual channel URL if you have it -->
+        <a class="subscribe-btn" id="subscribe-button" href="https://www.youtube.com/@kiara-mimi" target="_blank" rel="noopener noreferrer" aria-label='Subscribe to "Lulawo Michela Kiara" on YouTube'>
+          <!-- SVG YouTube icon -->
+          <svg width="18" height="14" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M23.6 2.1s-.2-1.6-.8-2.3C21.6-.3 20.4-.3 19.8-.4 16.6-.6 12 0 12 0s-4.6-.6-7.8-.4C3.6-.3 2.4-.3 1.2-.2c-.6.1-.8 1.6-.8 1.6S0 4.1 0 5.9v4.2c0 1.8.4 3.8.4 3.8s.2 1.5.8 1.6c1.2.1 2.4.1 3 .2 3.2.2 7.8 0 7.8 0s4.6.2 7.8 0c.6-.1 1.8-.1 3-.2.6-.1.8-1.6.8-1.6s.4-2 .4-3.8V5.9c0-1.8-.4-3.8-.4-3.8z" fill="#fff"/>
+            <path d="M9.75 11.02V4.98L15.5 8l-5.75 3.02z" fill="#fff"/>
+          </svg>
+          SUBSCRIBE
+        </a>
+
+        <button class="subscribe-later" id="subscribe-later">Maybe later</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const backdrop = document.getElementById('subscribe-backdrop');
+    const closeBtn = document.getElementById('subscribe-close');
+    const laterBtn = document.getElementById('subscribe-later');
+    const subscribeBtn = document.getElementById('subscribe-button');
+
+    // If dismissed within the last 7 days, don't show
+    const HIDE_KEY = 'subscribeModalDismissedUntil';
+    const dismissedUntil = localStorage.getItem(HIDE_KEY);
+    if (dismissedUntil && new Date(dismissedUntil) > new Date()) {
+      backdrop.style.display = 'none';
+    }
+
+    // Close permanently for 30 days (when they click "Maybe later")
+    laterBtn.addEventListener('click', () => {
+      const until = new Date();
+      until.setDate(until.getDate() + 30); // hide for 30 days
+      localStorage.setItem(HIDE_KEY, until.toISOString());
+      backdrop.style.display = 'none';
+    });
+
+    // Close temporarily (1 day) when they click the X
+    closeBtn.addEventListener('click', () => {
+      const until = new Date();
+      until.setDate(until.getDate() + 1); // hide for 1 day
+      localStorage.setItem(HIDE_KEY, until.toISOString());
+      backdrop.style.display = 'none';
+    });
+
+    // If user clicks subscribe, open the link and record a short-lived flag (so we don't bug them immediately)
+    subscribeBtn.addEventListener('click', () => {
+      const until = new Date();
+      until.setDate(until.getDate() + 90); // don't show again for 90 days
+      localStorage.setItem(HIDE_KEY, until.toISOString());
+      // note: link has target="_blank" so it opens in a new tab
+    });
+
+    // accessibility: close on ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeBtn.click();
+      }
+    });
+  })();
+</script>
+<!-- END: Subscribe Modal -->
+
+</body>
+</html>

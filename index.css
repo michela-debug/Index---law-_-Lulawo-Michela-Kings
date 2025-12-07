@@ -1,0 +1,21 @@
+.container {
+  max-width: 1200px;        /* Limits width */
+  margin: 0 auto;           /* Centers horizontally */
+  padding: 2rem;            /* Inner spacing */
+  background-color: #ffffff; /* White background */
+  border-radius: 12px;      /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  display: flex;            /* Enables flexible layout */
+  flex-direction: column;   /* Stacks child elements vertically */
+  gap: 1.5rem;              /* Spacing between children */
+}
+
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f6fa; /* Light gray background */
+  font-family: "Poppins", sans-serif;
+}

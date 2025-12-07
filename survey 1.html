@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Law Firm Survey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0a1a33;
+    padding: 20px;
+}
+.survey-box {
+    max-width: 520px;
+    background: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    border-top: 6px solid #d4af37;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+h2 { text-align: center; color: #0a1a33; }
+label { font-weight: bold; color: #0a1a33; }
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    width: 100%;
+    background: #d4af37;
+    color: #0a1a33;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:hover { background:#b8962e; }
+</style>
+</head>
+
+<body>
+
+<div class="survey-box">
+<h2>Legal Services Survey</h2>
+
+<form action="submit-survey.php" method="POST">
+
+<label>Full Name</label>
+<input type="text" name="name" required>
+
+<label>Email</label>
+<input type="email" name="email" required>
+
+<label>Have you used our services?</label>
+<select name="used_service" required>
+    <option value="">Select</option>
+    <option>Yes</option>
+    <option>No</option>
+</select>
+
+<label>Area of Law</label>
+<select name="law_type" required>
+    <option value="">Select</option>
+    <option>Criminal</option>
+    <option>Family</option>
+    <option>Corporate</option>
+    <option>Property</option>
+</select>
+
+<label>Satisfaction Level</label>
+<select name="satisfaction" required>
+    <option value="">Select</option>
+    <option>Very Satisfied</option>
+    <option>Satisfied</option>
+    <option>Neutral</option>
+    <option>Unsatisfied</option>
+</select>
+
+<label>Additional Feedback</label>
+<textarea name="feedback" rows="4"></textarea>
+
+<button type="submit">Submit Survey</button>
+
+</form>
+</div>
+
+</body>
+</html>
